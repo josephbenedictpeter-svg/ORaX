@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OraX Documentation — AI Agent for Web3 Market Expansion</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050A12;
+  --card: #0D1B2E;
+  --blue: #00AAFF;
+  --cyan: #00FFCC;
+  --white: #EEF4FF;
+  --muted: #4E6A85;
+  --border: rgba(0,170,255,0.15);
+  --text: #C8D8E8;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* Grid background */
+.grid-bg {
+  position: fixed; inset:0; pointer-events:none; z-index:0;
+  background-image: linear-gradient(rgba(0,170,255,0.03) 1px,transparent 1px), linear-gradient(90deg,rgba(0,170,255,0.03) 1px,transparent 1px);
+  background-size: 50px 50px;
+}
+.grid-bg::after { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 80% 50% at 50% 0%,transparent 30%,var(--bg) 100%); }
+
+/* Layout */
+.layout {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: rgba(13,27,46,0.8);
+  backdrop-filter: blur(12px);
+  border-right: 1px solid var(--border);
+  padding: 28px 0;
+}
+
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); }
+
+.sidebar-logo {
+  padding: 0 20px 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.sidebar-logo h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px; font-weight: 800;
+  color: var(--white);
+}
+.sidebar-logo h1 span { color: var(--blue); }
+.sidebar-logo p { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:2px; margin-top:4px; }
+
+.nav-section { margin-bottom: 24px; padding: 0 20px; }
+
+.nav-section-label {
+  font-family:'DM Mono',monospace; font-size:10px;
+  letter-spacing:3px; text-transform:uppercase;
+  color: var(--muted); margin-bottom:8px;
+}
+
+.nav-link {
+  display: block;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: all 0.15s;
+  margin-bottom: 2px;
+}
+.nav-link:hover { background: rgba(0,170,255,0.08); color: var(--white); }
+.nav-link.active { background: rgba(0,170,255,0.12); color: var(--blue); }
+
+/* Main content */
+.main {
+  flex: 1;
+  max-width: 780px;
+  padding: 48px 40px;
+  min-width: 0;
+}
+
+@media(max-width: 768px) {
+  .sidebar { display: none; }
+  .main { padding: 28px 18px; }
+}
+
+/* Sections */
+.doc-section {
+  margin-bottom: 64px;
+  scroll-margin-top: 24px;
+}
+
+/* Headers */
+.section-eyebrow {
+  font-family:'DM Mono',monospace; font-size:10px;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--blue); margin-bottom:10px;
+}
+
+h2 {
+  font-family:'Syne',sans-serif;
+  font-size: clamp(24px, 4vw, 34px);
+  font-weight:800; color:var(--white);
+  letter-spacing:-0.5px; margin-bottom:16px;
+  line-height:1.1;
+}
+
+h3 {
+  font-family:'Syne',sans-serif;
+  font-size:18px; font-weight:700;
+  color:var(--white); margin:28px 0 10px;
+}
+
+h4 {
+  font-family:'Syne',sans-serif;
+  font-size:15px; font-weight:700;
+  color:var(--blue); margin:16px 0 6px;
+}
+
+p { margin-bottom:14px; color:var(--text); }
+
+strong { color:var(--white); font-weight:600; }
+
+/* Hero section */
+.doc-hero {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius:16px; padding:32px;
+  margin-bottom:48px;
+  position:relative; overflow:hidden;
+}
+.doc-hero::before {
+  content:''; position:absolute;
+  top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,var(--blue),var(--cyan));
+}
+.doc-hero .hero-label {
+  font-family:'DM Mono',monospace; font-size:11px;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--cyan); margin-bottom:12px;
+}
+.doc-hero h1 {
+  font-family:'Syne',sans-serif;
+  font-size:clamp(28px,5vw,42px); font-weight:800;
+  color:var(--white); letter-spacing:-1px;
+  margin-bottom:12px; line-height:1.1;
+}
+.doc-hero p { font-size:16px; color:var(--muted); margin:0; }
+
+/* Cards */
+.card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:12px; padding:20px;
+  margin-bottom:14px;
+}
+
+.card h4 { margin-top:0; }
+
+/* Skills grid */
+.skills-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:12px; margin:16px 0;
+}
+@media(max-width:500px){ .skills-grid { grid-template-columns:1fr; } }
+
+.skill-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:10px; padding:16px;
+}
+.skill-card .skill-num {
+  font-family:'DM Mono',monospace; font-size:10px;
+  color:var(--blue); letter-spacing:2px; margin-bottom:6px;
+}
+.skill-card .skill-icon { font-size:20px; margin-bottom:6px; display:block; }
+.skill-card h4 { font-size:14px; margin:0 0 4px; }
+.skill-card p { font-size:12px; color:var(--muted); margin:0; line-height:1.5; }
+
+/* Flow steps */
+.flow-step {
+  display:flex; gap:16px;
+  margin-bottom:14px;
+}
+.step-num {
+  width:32px; height:32px; flex-shrink:0;
+  background:rgba(0,170,255,0.1); border:1px solid var(--border);
+  border-radius:8px; display:flex; align-items:center; justify-content:center;
+  font-family:'DM Mono',monospace; font-size:12px; color:var(--blue);
+  margin-top:2px;
+}
+.step-body h4 { margin-top:0; font-size:14px; }
+.step-body p { font-size:13px; color:var(--muted); margin:0; }
+
+/* Token table */
+.token-table {
+  width:100%; border-collapse:collapse;
+  margin:16px 0;
+}
+.token-table th {
+  font-family:'DM Mono',monospace; font-size:11px;
+  letter-spacing:2px; text-transform:uppercase;
+  color:var(--muted); text-align:left;
+  padding:10px 14px;
+  border-bottom:1px solid var(--border);
+}
+.token-table td {
+  padding:12px 14px;
+  border-bottom:1px solid rgba(0,170,255,0.06);
+  font-size:14px;
+}
+.token-table tr:last-child td { border-bottom:none; }
+.token-table td:first-child { color:var(--muted); font-family:'DM Mono',monospace; font-size:12px; }
+.token-table td:last-child { color:var(--white); }
+
+/* Roadmap */
+.roadmap-phase {
+  border-left:2px solid var(--border);
+  padding-left:20px; margin-bottom:28px;
+  position:relative;
+}
+.roadmap-phase::before {
+  content:''; position:absolute;
+  left:-5px; top:4px;
+  width:8px; height:8px;
+  background:var(--blue); border-radius:50%;
+  box-shadow:0 0 8px var(--blue);
+}
+.phase-label {
+  font-family:'DM Mono',monospace; font-size:11px;
+  color:var(--blue); letter-spacing:2px;
+  text-transform:uppercase; margin-bottom:6px;
+}
+.phase-title {
+  font-family:'Syne',sans-serif; font-size:16px;
+  font-weight:700; color:var(--white); margin-bottom:10px;
+}
+.phase-items { list-style:none; }
+.phase-items li {
+  font-size:13px; color:var(--muted);
+  padding:3px 0; display:flex; gap:8px; align-items:flex-start;
+}
+.phase-items li::before { content:'→'; color:var(--blue); flex-shrink:0; }
+
+/* Status badges */
+.badge {
+  display:inline-block; padding:2px 8px;
+  border-radius:4px; font-size:11px; font-weight:600;
+  font-family:'DM Mono',monospace; letter-spacing:1px;
+}
+.badge-live { background:rgba(0,255,150,0.1); color:#00ff96; border:1px solid rgba(0,255,150,0.2); }
+.badge-soon { background:rgba(0,170,255,0.1); color:var(--blue); border:1px solid var(--border); }
+.badge-future { background:rgba(255,255,255,0.05); color:var(--muted); border:1px solid rgba(255,255,255,0.08); }
+
+/* Info box */
+.info-box {
+  background:rgba(0,255,200,0.04);
+  border:1px solid rgba(0,255,200,0.15);
+  border-radius:10px; padding:16px 18px;
+  margin:16px 0;
+}
+.info-box p { margin:0; font-size:13px; color:var(--text); }
+.info-box p span { color:var(--cyan); font-weight:600; }
+
+/* Warning box */
+.warn-box {
+  background:rgba(255,170,0,0.04);
+  border:1px solid rgba(255,170,0,0.15);
+  border-radius:10px; padding:16px 18px;
+  margin:16px 0;
+}
+.warn-box p { margin:0; font-size:13px; color:#ffcc66; }
+
+/* Divider */
+.doc-divider {
+  border:none; border-top:1px solid var(--border);
+  margin:48px 0;
+}
+
+/* Links */
+.social-links { display:flex; flex-wrap:wrap; gap:12px; margin-top:16px; }
+.social-link {
+  display:flex; align-items:center; gap:8px;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:8px; padding:10px 16px;
+  text-decoration:none; color:var(--white);
+  font-size:13px; transition:all 0.2s;
+}
+.social-link:hover { border-color:var(--blue); color:var(--blue); }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <h1>Ora<span>X</span></h1>
+      <p>DOCUMENTATION</p>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Overview</div>
+      <a href="#intro" class="nav-link active">Introduction</a>
+      <a href="#problem" class="nav-link">The Problem</a>
+      <a href="#solution" class="nav-link">The Solution</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">The Agent</div>
+      <a href="#skills" class="nav-link">Agent Skills</a>
+      <a href="#how-it-works" class="nav-link">How It Works</a>
+      <a href="#openclaw" class="nav-link">OpenClaw Framework</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Token</div>
+      <a href="#tokenomics" class="nav-link">$ORAX Tokenomics</a>
+      <a href="#buyback" class="nav-link">Buyback & Burn</a>
+      <a href="#how-to-buy" class="nav-link">How to Buy</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Project</div>
+      <a href="#proof" class="nav-link">Proof of Concept</a>
+      <a href="#roadmap" class="nav-link">Roadmap</a>
+      <a href="#team" class="nav-link">Team</a>
+      <a href="#community" class="nav-link">Community</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="doc-hero">
+      <div class="hero-label">Official Documentation — v1.0</div>
+      <h1>OraX — AI Agent for Web3 Market Expansion</h1>
+      <p>Everything you need to understand what OraX does, how the agent works, and what $ORAX represents.</p>
+    </div>
+
+    <!-- INTRODUCTION -->
+    <div class="doc-section" id="intro">
+      <div class="section-eyebrow">01 — Introduction</div>
+      <h2>What is OraX?</h2>
+      <p>OraX is a tokenized AI agent built to solve one of Web3's most persistent problems: protocols that raise capital, build products, and launch tokens — but never reach real-world users outside of the crypto-native bubble.</p>
+      <p>OraX bridges that gap. It deploys into a target geographic or demographic market, finds the right users, reaches them in their language, and onboards them into the protocol — all autonomously, running 24/7 on a cloud server.</p>
+      <p>The agent is powered by the <strong>OpenClaw framework</strong>, deployed via the <strong>EVE Launcher</strong>, and its operation is funded and governed by the <strong>$ORAX token</strong>.</p>
+
+      <div class="info-box">
+        <p>🚀 <span>$ORAX is launching on Pump.fun.</span> OraX is already battle-tested on a live RWA protocol campaign in Spain. The agent works. Now it's tokenized.</p>
+      </div>
+    </div>
+
+    <hr class="doc-divider">
+
+    <!-- THE PROBLEM -->
+    <div class="doc-section" id="problem">
+      <div class="section-eyebrow">02 — The Problem</div>
+      <h2>Why Web3 Protocols Fail at Real-World Adoption</h2>
+      <p>Despite billions raised in the last decade, Web3 protocols consistently struggle to acquire users outside of crypto-native circles. The reasons are structural:</p>
+
+      <div class="card">
+        <h4>🌐 Marketing stays on Crypto Twitter</h4>
+        <p style="font-size:13px;color:var(--muted);margin:0;">Most Web3 marketing is built for people who already understand wallets, DeFi, and on-chain mechanics. Real-world users — property owners, small businesses, everyday consumers — never see it.</p>
+      </div>
+      <div class="card">
+        <h4>🗺️ No geographic strategy</h4>
+        <p style="font-size:13px;color:var(--muted);margin:0;">Protocols launch globally but have no playbook for entering a specific city, country, or industry. A DeFi protocol targeting Brazilian farmers and an RWA protocol targeting Spanish landlords need completely different approaches — most teams have neither.</p>
+      </div>
+      <div class="card">
+        <h4>🤖 Ambassadors operate without tools</h4>
+        <p style="font-size:13px;color:var(--muted);margin:0;">Community ambassador programs generate social media noise but rarely produce qualified leads. They rely on manual effort, have no automation layer, and produce no measurable reporting.</p>
+      </div>
+      <div class="card">
+        <h4>🌍 Language and cultural barriers</h4>
+        <p style="font-size:13px;color:var(--muted);margin:0;">Reaching a host in Seville requires different language, tone, and platform strategy than reaching an investor in London. Generic outreach doesn't convert across cultural contexts.</p>
+      </div>
+    </div>
+
+    <hr class="doc-divider">
+
+    <!-- SOLUTION -->
+    <div class="doc-section" id="solution">
+      <div class="section-eyebrow">03 — The Solution</div>
+      <h2>OraX: Autonomous Market Entry for Web3 Protocols</h2>
+      <p>OraX is not a marketing agency. It is an AI agent — a software system that executes a complete market entry workflow autonomously, on behalf of Web3 protocol clients.</p>
+      <p>A protocol provides OraX with three inputs: <strong>target market</strong>, <strong>ideal user profile</strong>, and <strong>preferred language</strong>. OraX handles everything from there — research, outreach, follow-up, content, and reporting — without requiring ongoing human management.</p>
+      <p>The result: qualified leads delivered into the protocol's pipeline, community activated in the target market, and weekly reporting showing exactly what was done and what it produced.</p>
+    </div>
+
+    <hr class="doc-divider">
+
+    <!-- SKILLS -->
+    <div class="doc-section" id="skills">
+      <div class="section-eyebrow">04 — The Agent</div>
+      <h2>OraX Agent Skills</h2>
+      <p>OraX operates through six core skills. Each skill is a reusable, configurable workflow that can be deployed for any protocol in any market.</p>
+
+      <div class="skills-grid">
+        <div class="skill-card">
+          <div class="skill-num">SKILL 01</div>
+          <span class="skill-icon">🔍</span>
+          <h4>Market Scanning</h4>
+          <p>Crawls listing platforms, social media groups, LinkedIn, and local directories to build a raw lead list in the target market. Hits 17+ data sources simultaneously.</p>
+        </div>
+        <div class="skill-card">
+          <div class="skill-num">SKILL 02</div>
+          <span class="skill-icon">🎯</span>
+          <h4>Lead Qualification</h4>
+          <p>Scores and filters raw leads against the protocol's ideal user profile. Removes noise and prioritises the highest-probability targets for outreach.</p>
+        </div>
+        <div class="skill-card">
+          <div class="skill-num">SKILL 03</div>
+          <span class="skill-icon">✍️</span>
+          <h4>Localized Outreach</h4>
+          <p>Generates personalised message sequences in the lead's native language, formatted for each platform — WhatsApp, LinkedIn, Telegram, Facebook, email.</p>
+        </div>
+        <div class="skill-card">
+          <div class="skill-num">SKILL 04</div>
+          <span class="skill-icon">🔄</span>
+          <h4>Follow-up Automation</h4>
+          <p>Tracks response status across all leads. Flags warm leads for human follow-up. Queues and sends follow-up messages on schedule so no lead goes cold.</p>
+        </div>
+        <div class="skill-card">
+          <div class="skill-num">SKILL 05</div>
+          <span class="skill-icon">📝</span>
+          <h4>Content Generation</h4>
+          <p>Drafts weekly educational content for Medium, LinkedIn, and Binance Square — warming up cold leads who need more context before responding to direct outreach.</p>
+        </div>
+        <div class="skill-card">
+          <div class="skill-num">SKILL 06</div>
+          <span class="skill-icon">📊</span>
+          <h4>Client Reporting</h4>
+          <p>Compiles a weekly campaign summary showing leads generated, outreach sent, response rate, conversions, and content published. Delivered directly to the client.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="doc-divider">
+
+    <!-- HOW IT WORKS -->
+    <div class="doc-section" id="how-it-works">
+      <div class="section-eyebrow">05 — Operations</div>
+      <h2>How OraX Works</h2>
+      <p>OraX follows a five-stage deployment flow for every protocol engagement:</p>
+
+      <div class="flow-step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h4>Protocol Brief</h4>
+          <p>The client protocol provides a market brief: target geography, ideal user type, and preferred outreach language. OraX uses this to configure all six skills for the specific campaign.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h4>Agent Deployment</h4>
+          <p>OraX is deployed onto a Virtual Private Server (VPS) via the EVE Launcher. The OpenClaw Heartbeat loop activates — the agent wakes on a schedule, checks its task queue, and executes autonomously.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h4>Lead Generation</h4>
+          <p>The scanning and qualification skills run continuously, building and refining the lead list. Sources include local listing platforms, professional networks, social media groups, and forums relevant to the target market.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <h4>Outreach Execution</h4>
+          <p>The outreach skill generates localised messages and the agent distributes them across platforms on a human-paced schedule to avoid spam detection. Follow-ups are queued automatically based on response signals.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">05</div>
+        <div class="step-body">
+          <h4>Reporting & Handoff</h4>
+          <p>Warm leads are flagged and handed off to the protocol's team or ambassador network for closing. A weekly report is generated and delivered showing full campaign metrics.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="doc-divider">
+
+    <!-- OPENCLAW -->
+    <div class="doc-section" id="openclaw">
+      <div class="section-eyebrow">06 — Technology</div>
+      <h2>Built on OpenClaw</h2>
+      <p>OraX is built on <strong>OpenClaw</strong>, an open-source AI agent framework designed to execute tasks autonomously rather than just answer questions. OpenClaw transforms AI from a conversational tool into an operational system.</p>
+
+      <h3>Key OpenClaw Capabilities</h3>
+      <div class="card">
+        <h4>The Heartbeat Loop</h4>
+        <p style="font-size:13px;color:var(--muted);margin:0;">OpenClaw's Heartbeat system wakes the agent on a regular schedule to check its task queue and execute pending actions. This means OraX operates continuously without requiring manual triggering — it runs while you sleep.</p>
+      </div>
+      <div class="card">
+        <h4>Native Messaging Integration</h4>
+        <p style="font-size:13px;color:var(--muted);margin:0;">OpenClaw integrates natively with WhatsApp, Telegram, Slack, Discord, and 20+ other messaging platforms. OraX lives where your leads already are — not in a separate dashboard.</p>
+      </div>
+      <div class="card">
+        <h4>Multi-Source Intelligence</h4>
+        <p style="font-size:13px;color:var(--muted);margin:0;">OraX's search skill integrates 17 search engines simultaneously — including Google, LinkedIn, DuckDuckGo, and WolframAlpha — for comprehensive market intelligence in any geography.</p>
+      </div>
+      <div class="card">
+        <h4>Onchain Execution</h4>
+        <p style="font-size:13px;color:var(--muted);margin:0;">Via MetaMask integration, OpenClaw-powered agents can execute onchain transactions using delegated smart wallet permissions — enabling OraX to guide leads through wallet setup and first protocol actions without accessing private keys.</p>
+      </div>
+
+      <div class="warn-box">
+        <p>⚠️ OpenClaw skills are in active development. OraX deploys non-financial skills (lead gen, outreach, content) first. Onchain execution features are tested thoroughly before client deployment.</p>
+      </div>
+    </div>
+
+    <hr class="doc-divider">
+
+    <!-- TOKENOMICS -->
+    <div class="doc-section" id="tokenomics">
+      <div class="section-eyebrow">07 — Token</div>
+      <h2>$ORAX Tokenomics</h2>
+      <p>$ORAX is the token that powers and governs the OraX agent economy. It is designed to be simple, fair, and directly tied to agent performance.</p>
+
+      <table class="token-table">
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Detail</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Token Name</td><td>OraX</td></tr>
+          <tr><td>Ticker</td><td>$ORAX</td></tr>
+          <tr><td>Total Supply</td><td>1,000,000,000 (1 Billion)</td></tr>
+          <tr><td>Launch Platform</td><td>Pump.fun</td></tr>
+          <tr><td>Launch Type</td><td>Fair Launch — Bonding Curve</td></tr>
+          <tr><td>Pre-sale</td><td>None</td></tr>
+          <tr><td>Insider Allocation</td><td>None</td></tr>
+          <tr><td>VC Allocation</td><td>None</td></tr>
+          <tr><td>Supply Control</td><td>Founder-controlled</td></tr>
+          <tr><td>Infrastructure</td><td>EVE Launcher + OpenClaw</td></tr>
+          <tr><td>Blockchain</td><td>Solana</td></tr>
+        </tbody>
+      </table>
+
+      <div class="info-box">
+        <p>💡 <span>Fair launch means everyone starts at the same entry point.</span> No whales, no insiders, no presale participants with lower prices. Early community members get in at the lowest possible price purely based on when they buy.</p>
+      </div>
+    </div>
+
+    <hr class="doc-divider">
+
+    <!-- BUYBACK -->
+    <div class="doc-section" id="buyback">
+      <div class="section-eyebrow">08 — Token Mechanics</div>
+      <h2>Buyback & Burn Mechanism</h2>
+      <p>OraX implements a revenue-backed buyback and burn mechanism — meaning a portion of every dollar the agent earns from protocol clients is used to automatically buy back and permanently remove $ORAX from circulation.</p>
+
+      <h3>How It Works</h3>
+      <div class="flow-step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h4>Agent earns revenue</h4>
+          <p>OraX charges protocol clients for market entry campaigns — retainers, project fees, and performance-based payments.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h4>Revenue allocated to buybacks</h4>
+          <p>A portion of incoming revenue is automatically allocated to buy $ORAX from the open market via Pump.fun's tokenized agent buyback feature.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h4>Tokens burned</h4>
+          <p>Purchased tokens are permanently removed from circulation — reducing total supply over time and increasing scarcity for remaining holders.</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <p>🔥 <span>The agent working = the token strengthening.</span> Every protocol client OraX onboards directly contributes to $ORAX token value through buybacks and burns. Holders are aligned with the agent's success.</p>
+      </div>
+
+      <p>The exact percentage allocated to buybacks will be confirmed at launch and communicated via the official channels. The mechanism uses Pump.fun's native tokenized agent buyback feature.</p>
+    </div>
+
+    <hr class="doc-divider">
+
+    <!-- HOW TO BUY -->
+    <div class="doc-section" id="how-to-buy">
+      <div class="section-eyebrow">09 — Getting Started</div>
+      <h2>How to Buy $ORAX</h2>
+
+      <div class="flow-step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h4>Set up a Solana wallet</h4>
+          <p>Download Phantom or Solflare wallet. Create a new wallet and securely store your seed phrase — never share it with anyone.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h4>Get SOL</h4>
+          <p>Purchase Solana (SOL) from any major exchange (Binance, Coinbase, Kraken) and send it to your wallet address.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h4>Go to Pump.fun</h4>
+          <p>Visit pump.fun and connect your Solana wallet. Search for $ORAX or use the direct link shared in our official channels.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <h4>Buy $ORAX</h4>
+          <p>Enter the amount of SOL you want to spend, confirm the transaction, and your $ORAX tokens will appear in your wallet immediately.</p>
+        </div>
+      </div>
+
+      <div class="warn-box">
+        <p>⚠️ Only buy $ORAX from the official Pump.fun link shared in our Discord and Twitter/X. Never buy from links sent in DMs — the OraX team will never DM you first.</p>
+      </div>
+    </div>
+
+    <hr class="doc-divider">
+
+    <!-- PROOF -->
+    <div class="doc-section" id="proof">
+      <div class="section-eyebrow">10 — Proof of Concept</div>
+      <h2>Already Battle-Tested</h2>
+      <p>OraX is not a concept. The entire agent workflow was run manually on a live RWA protocol campaign before the agent was built — proving the model works before the token launched.</p>
+
+      <div class="card" style="border-color:rgba(0,255,200,0.2);">
+        <h4 style="color:var(--cyan);">Live Campaign — RWA Protocol, Spain 🇪🇸</h4>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">A real-world asset protocol needed to reach short-term rental hosts in Spain. The OraX founder ran the full campaign manually — every step that OraX now automates was executed by hand to prove the methodology.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div style="background:rgba(0,170,255,0.05);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue);">5+</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px;">Platforms Reached</div>
+          </div>
+          <div style="background:rgba(0,170,255,0.05);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue);">2 wks</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px;">Full Campaign Built</div>
+          </div>
+          <div style="background:rgba(0,170,255,0.05);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue);">✓</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px;">Hosts Converted</div>
+          </div>
+          <div style="background:rgba(0,170,255,0.05);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue);">CEO</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px;">Founder Meeting</div>
+          </div>
+        </div>
+      </div>
+      <p>What took two weeks of manual work becomes a 24/7 autonomous operation when run through OraX. The same campaign that required constant human attention now runs on a VPS without intervention.</p>
+    </div>
+
+    <hr class="doc-divider">
+
+    <!-- ROADMAP -->
+    <div class="doc-section" id="roadmap">
+      <div class="section-eyebrow">11 — Roadmap</div>
+      <h2>Where OraX is Going</h2>
+
+      <div class="roadmap-phase">
+        <div class="phase-label">Phase 1 — Now <span class="badge badge-live">LIVE</span></div>
+        <div class="phase-title">Launch</div>
+        <ul class="phase-items">
+          <li>Agent concept proven on live RWA protocol campaign in Spain</li>
+          <li>OraX community launched — Discord, Twitter/X</li>
+          <li>$ORAX token launches on Pump.fun</li>
+          <li>OraX agent deployed on VPS via OpenClaw</li>
+          <li>APK released — agent manageable from mobile</li>
+        </ul>
+      </div>
+
+      <div class="roadmap-phase">
+        <div class="phase-label">Phase 2 — Month 1–2 <span class="badge badge-soon">COMING SOON</span></div>
+        <div class="phase-title">First Client</div>
+        <ul class="phase-items">
+          <li>OraX deployed for first paying protocol client</li>
+          <li>Agent runs full 6-skill campaign autonomously</li>
+          <li>First agent revenue generated</li>
+          <li>Buyback and burn mechanism activated</li>
+          <li>First campaign results published publicly</li>
+        </ul>
+      </div>
+
+      <div class="roadmap-phase">
+        <div class="phase-label">Phase 3 — Month 3–6 <span class="badge badge-future">UPCOMING</span></div>
+        <div class="phase-title">Scale</div>
+        <ul class="phase-items">
+          <li>OraX deployed across 3+ protocol clients in different markets</li>
+          <li>Ambassador network launched — paid roles for community members</li>
+          <li>Expansion Kit released for individual ambassadors</li>
+          <li>Ongoing buybacks reducing token supply</li>
+          <li>First cohort training program launched</li>
+        </ul>
+      </div>
+
+      <div class="roadmap-phase">
+        <div class="phase-label">Phase 4 — Month 6–12 <span class="badge badge-future">UPCOMING</span></div>
+        <div class="phase-title">Agency</div>
+        <ul class="phase-items">
+          <li>OraX established as a recognised Web3 market entry agency</li>
+          <li>Multi-market campaigns running simultaneously</li>
+          <li>$ORAX listed on DEX post Pump.fun graduation</li>
+          <li>Revenue sharing model introduced for long-term holders</li>
+          <li>10+ ambassadors active across Africa, Europe and LATAM</li>
+        </ul>
+      </div>
+
+      <p style="font-size:13px;color:var(--muted);margin-top:8px;"><em>Roadmap is subject to updates as the agent evolves. Follow #announcements in Discord for changes.</em></p>
+    </div>
+
+    <hr class="doc-divider">
+
+    <!-- TEAM -->
+    <div class="doc-section" id="team">
+      <div class="section-eyebrow">12 — Team</div>
+      <h2>Who is Behind OraX</h2>
+
+      <div class="card" style="display:flex;gap:16px;align-items:flex-start;">
+        <div style="width:52px;height:52px;background:linear-gradient(135deg,#003366,#0066cc);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:#00AAFF;font-size:16px;flex-shrink:0;">LC</div>
+        <div>
+          <h4 style="color:var(--white);font-size:16px;">Levi Curry</h4>
+          <p style="font-size:12px;color:var(--blue);margin-bottom:8px;font-family:'DM Mono',monospace;letter-spacing:1px;">FOUNDER — MARKET STRATEGY & OPERATIONS</p>
+          <p style="font-size:13px;color:var(--muted);margin:0;">Web3 community builder, ambassador, and growth strategist based in Nigeria. Founder of ContriBase — a grassroots blockchain onboarding initiative. Active in the Base blockchain ecosystem with hands-on experience building ambassador programs and real-world Web3 campaigns across multiple protocols. Proven track record running live market entry campaigns for RWA protocols.</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px;display:flex;gap:16px;align-items:flex-start;">
+        <div style="width:52px;height:52px;background:linear-gradient(135deg,#1a0066,#5500cc);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:#AA00FF;font-size:16px;flex-shrink:0;">AS</div>
+        <div>
+          <h4 style="color:var(--white);font-size:16px;">Adam — Songjam</h4>
+          <p style="font-size:12px;color:var(--blue);margin-bottom:8px;font-family:'DM Mono',monospace;letter-spacing:1px;">TECHNICAL LEAD — INFRASTRUCTURE & DEPLOYMENT</p>
+          <p style="font-size:13px;color:var(--muted);margin:0;">Builder behind the EVE Launcher and OpenClaw integration infrastructure. Responsible for agent deployment architecture, VPS setup, tokenized agent mechanics, and the APK that enables mobile-first agent management. Technical backbone of the OraX agent stack.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="doc-divider">
+
+    <!-- COMMUNITY -->
+    <div class="doc-section" id="community">
+      <div class="section-eyebrow">13 — Community</div>
+      <h2>Join the OraX Community</h2>
+      <p>OraX is community-driven. The people who join early shape the direction of the agent, get first access to ambassador roles, and participate in the token economy as the agent generates revenue.</p>
+
+      <div class="social-links">
+        <a href="https://discord.gg/scD5gJzS3" class="social-link" target="_blank">
+          <span>💬</span> Discord — OraX Community
+        </a>
+        <a href="https://x.com/OraX_Agent" class="social-link" target="_blank">
+          <span>🐦</span> Twitter/X — @OraX_Agent
+        </a>
+        <a href="#" class="social-link">
+          <span>🚀</span> Pump.fun — $ORAX Coming Soon
+        </a>
+      </div>
+
+      <div class="info-box" style="margin-top:20px;">
+        <p>⚠️ <span>Stay safe.</span> The OraX team will never DM you first asking for funds or your seed phrase. Only use official links from our Discord and Twitter/X accounts.</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // Highlight active nav link on scroll
+  const sections = document.querySelectorAll('.doc-section');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const id = entry.target.getAttribute('id');
+        const link = document.querySelector(`.nav-link[href="#${id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
